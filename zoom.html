@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Zoom test</title>
+    
+    <script src="mootools-1.2-core-nc.js" type="text/javascript"></script>
+    <script src="mootools-1.2-more.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+var globalZoom = 1.00;
+var integrationFactor = 0.3;
+
+function buildTask(task) {
+    var el = new Element('div');
+    el.task =  task;
+    el.setStyles({
+        'border': '1px solid black',
+        'border-color': 'rgb(255,0,0)',
+        'overflow': 'hidden',
+        'font-family': 'sans-serif',
+        'font-weight': 'bold',
+        'white-space': 'nowrap',
+        'background': 'rgba(255, 0, 0, 0.3)'
+    });
+    el.taskTitle = new Element('span').set('text', task.title).inject(el);
+    el.description = new Element('div').set('text', task.description);
+    el.description.setStyles({
+        'font-weight': 'normal'
+    });
+    el.zoom = function(e) {
+        if(globalZoom > 1.0) {
+            this.description.inject(this.taskTitle, 'after');
+            this.description.setStyle('font-size', 8 * globalZoom + 'pt');
+        } else {
+            this.description.dispose();
+        }
+        
+        this.setStyles({
+            'width': this.task.duration * globalZoom + 'em',
+            'font-size': 10 * globalZoom + 'pt',
+            'padding': 0.3 * globalZoom +'em',
+            'margin': 0.2 * globalZoom + 'em',
+            '-moz-border-radius': 0.6 * globalZoom + 'em'
+        });
+        this.childTasks.forEach(function (child) {
+            child.zoom();
+        });
+    }.bind(el);
+
+    el.childTasks = [];
+    el.addChildTask = function(child) {
+        this.childTasks.push(child);
+        child.inject(this);
+        this.refactor();
+        child.parentTask = this;
+    }.bind(el);
+    
+    el.refactor = function() {
+        this.duration = this.childTasks.map(function(x,y) {return x + y;}) * integrationFactor;
+    }.bind(el);
+    
+    
+    return el;
+}
+
+window.addEvent('domready', function () {
+    var zoomer = buildTask({
+        title: "Title of task",
+        description: "This is the description to show at certain zoom levels",
+        duration: 15
+    });
+    
+    var zoomerChild = buildTask({
+        title: "Title of task 2",
+        description: "This is the description to show at certain zoom levels",
+        duration: 12
+    });
+    zoomer.addChildTask(zoomerChild);
+    
+    var zoomerChild2 = buildTask({
+        title: "Title of task 3",
+        description: "This is the description to show at certain zoom levels",
+        duration: 8
+    });
+    zoomer.addChildTask(zoomerChild2);
+
+    
+    zoomer.zoom();
+    window.addEvent('mousewheel', function(e) {
+        zoomFactor = globalZoom * (e.wheel > 0 ? 0.95 : 1.05);
+        globalZoom = zoomFactor > 3 ? 3 : zoomFactor; 
+        zoomer.zoom();
+        e.stop();
+    });
+    zoomer.inject($(document.body));
+});
+
+</script>
+
+</head>
+<body>
+</body>
+</html>

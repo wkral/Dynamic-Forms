@@ -1,0 +1,25 @@
+{
+    'url': '/submit',
+    'method': 'post',
+    'fields': [
+    {
+        'name': 'blah',
+        'label': 'My Text:',
+        'type': 'text',
+        'value': 'hello',
+        'validation': [
+        {
+            'expr': "^[A-Za-z]{0,10}$",
+            'message': "Must be a maximum of 10 alphabetic characters"
+        }
+        ]
+    },
+    {
+        'name': 'blah2',
+        'label': 'My select:',
+        'type': 'select',
+        'value': 'choice2',
+        'options': ['choice1', 'choice2', 'choice3']
+    }
+    ]
+}

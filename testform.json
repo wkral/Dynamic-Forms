@@ -9,17 +9,36 @@
         'value': 'hello',
         'validation': [
         {
-            'expr': "^[A-Za-z]{0,10}$",
-            'message': "Must be a maximum of 10 alphabetic characters"
+            'expr': '^[A-Za-z]*$',
+            'message': 'Must be all alphabetic characters'
+        },
+        {
+            'expr': '^.{0,10}$',
+            'message': 'Can only contain up to 10 characters'
         }
         ]
     },
     {
         'name': 'blah2',
+        'label': 'My radios:',
+        'type': 'selectOne',
+        'value': 'choice2',
+        'options': ['choice1', 'choice2']
+    },
+    {
+        'name': 'blah3',
         'label': 'My select:',
-        'type': 'select',
+        'type': 'selectOne',
         'value': 'choice2',
         'options': ['choice1', 'choice2', 'choice3']
+    },
+    {
+        'name': 'blah4',
+        'label': 'My checkboxes:',
+        'type': 'selectMany',
+        'values': ['choice2', 'choice4'],
+        'options': ['choice1', 'choice2', 'choice3', 'choice4']
     }
+
     ]
 }

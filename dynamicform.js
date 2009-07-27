@@ -190,9 +190,3 @@ function addValidation(validations, field, prefs) {
         error(e);
     }
 }
-
-$(function () {
-    $.getJSON('testform.json', function(json) {
-        buildForm(json).appendTo('body');
-    });
-});
